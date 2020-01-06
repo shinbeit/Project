@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ticketMapper">
+	<!-- 진교 -->
+	<select id="posterReadData" parameterType="String" resultType="com.ticket.dto.PosterDTO">
+		SELECT distinct a.performCode, a.performName,a.performMainImage, a.performStartDate,
+		a.performEnddate, b.placeName,b.PLACEADDR,
+		c.genreName, d.ratingname, a.performrunningTime
+		from performData a, placeData b, genreData c, ratingData d
+		where a.performPlaceCode = b.placeCode and a.performGenreCode = c.genreCode 
+		and a.performRatingCode = d.ratingCode and a.performCode = #{performCode}
+	</select>
+
+	<select id="payReadData" parameterType="String"	resultType="com.ticket.dto.PayDTO">
+		select rclass, sclass, vclass, notSelectClass
+		from seatingData
+		where
+		performcode = #{performcode}
+	</select>
+
+	<select id="detailImageRead" parameterType="String" resultType="com.ticket.dto.PerformDetailDTO">
+		select performDetailimage 
+		from performdetail where performcode = #{performcode}
+	</select>
+	
+	<select id="infoMap" parameterType="String" resultType="map">
+		SELECT distinct a.performCode, b.PLACEMAPX, b.PLACEMAPY,b.PLACEADDR
+		from performData a, placeData b
+		where a.performPlaceCode = b.placeCode and a.performCode = #{performcode}
+	</select>
+	
+	
+	<!-- 관람후기 게시판  -->
+	
+	<select id="reviewMaxNum" resultType="int">
+	select nvl(max(boardNum),0) from reviewBoard
+	</select>
+			
+	<insert id="insertData" parameterType="com.ticket.dto.ReviewBoardDTO">
+	insert into reviewBoard(boardNum, performCode, subject,score,message, userId, created) 
+	values (#{boardNum},#{performCode},#{subject},#{score},#{message},#{userId},sysdate)
+	</insert>
+	
+	 <select id="listData" parameterType="String" resultType="com.ticket.dto.ReviewBoardDTO">
+	select userid, score, subject, message, to_char(created,'yyyy-mm-dd') created, boardNum from reviewBoard 
+	where performcode = #{performcode}
+	</select> 
+
+<!-- 	<select id="listData" resultType="map" parameterType="com.ticket.dto.ReviewBoardDTO">
+	select * from(
+	select rownum rnum, data. * from(
+	select boardNum,subject,message,userId,created,score
+	from reviewBoard order by boardNum desc) data)
+	<![CDATA[
+	where rnum>=#{start} and rnum<=#{end} and performcode = #{performcode}
+	]]>
+	</select> -->
+	 
+	<delete id="deleteData" parameterType="com.ticket.dto.ReviewBoardDTO">
+	delete from reviewBoard where performCode = #{performCode} and boardNum=#{boardNum}
+	</delete>
+	
+	<select id="dataCount" resultType="int" parameterType="String">
+	select nvl(count(*),0) from reviewBoard where performcode = #{performcode}
+	</select>
+	
+	<!-- 관람후기 게시판  -->
+	
+</mapper>

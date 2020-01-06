@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mainMapper">
+
+					<!-- ♥ --><!-- ♥ --><!-- ♥ --><!-- 일반회원 --><!-- ♥ --><!-- ♥ --><!-- ♥ -->
+
+	<select id="maxNum" resultType="int">
+		select nvl(max(num),0) from userSignUp
+	</select>
+
+	<insert id="insertUserSignUpData" parameterType="com.ticket.dto.UserMainDTO">	<!-- 일반사용자 회원가입 -->
+		insert into userInfo(num,userId,userPwd,userName,userAddr,userRoadAddr,userJibunAddr,userFinalAddr,
+		userBirth,userGender,userUpdateDate,userEmail,userPhoneNum,userPoint,userCoupon,userDisCount)
+		values(#{num},#{userId},#{userPwd},#{userName},#{userAddr},#{userRoadAddr},#{userJibunAddr},
+		#{userFinalAddr},#{userBirth},#{userGender},sysdate,#{userEmail},#{userPhoneNum},0,0,0)
+	</insert>
+	
+	<select id="myPageReadData" resultType="com.ticket.dto.UserMainDTO" parameterType="String">   <!-- 일반사용자 마이페이지 -->
+		select num,userId,userPwd,userName,userAddr,userFinalAddr,userUpdateDate,
+		userEmail,userPhoneNum from userInfo where userId=#{userId}
+	</select>	
+	
+	<select id="idCheck" resultType="String" parameterType="String"> <!-- 일반사용자 아이디 체크 -->
+		select userId from userInfo
+		where userId=#{userId}
+	</select>
+	
+	<update id="updateUserData" parameterType="com.ticket.dto.UserMainDTO">
+		update userInfo set userPwd=#{userPwd},userAddr=#{userAddr},userFinalAddr=#{userFinalAddr}
+		,userEmail=#{userEmail},userPhoneNum=#{userPhoneNum} 
+		where userId=#{userId}
+	</update>
+	
+					<!-- ♥ --><!-- ♥ --><!-- ♥ --><!-- 일반회원 --><!-- ♥ --><!-- ♥ --><!-- ♥ -->
+	
+	
+	
+	
+	
+					<!-- ♥ --><!-- ♥ --><!-- ♥ --><!-- 기업회원 --><!-- ♥ --><!-- ♥ --><!-- ♥ -->
+	
+	<select id="maxCompanyNum" resultType="int">
+		select nvl(max(num),0) from companyInfo
+	</select>
+	
+	<insert id="insertCompanySignUpData" parameterType="com.ticket.dto.CompanyMainDTO">	  <!-- 기업회원 회원가입 -->
+		insert into companyInfo(num,companyId,companyPwd,companyName,companyAddr,companyRoadAddr,companyJibunAddr,companyFinalAddr,
+		companyUpdateDate,companyEmail,companyPhoneNum)
+		values(#{num},#{companyId},#{companyPwd},#{companyName},#{companyAddr},#{companyRoadAddr},#{companyJibunAddr},
+		#{companyFinalAddr},sysdate,#{companyEmail},#{companyPhoneNum})
+	</insert>
+	
+	<select id="myPageCompanyReadData" resultType="com.ticket.dto.CompanyMainDTO" parameterType="String">   <!-- 기업회원 마이페이지 -->
+		select num,companyId,companyPwd,companyName,companyAddr,companyFinalAddr,companyEmail,companyPhoneNum from companyInfo where companyId=#{companyId}
+	</select>
+	
+	<select id="companyIdCheck" resultType="String" parameterType="String"> <!-- 기업회원 아이디 체크 -->
+		select companyId from companyInfo
+		where companyId=#{companyId}
+	</select>
+	
+	<update id="updateCompanyData" parameterType="com.ticket.dto.CompanyMainDTO">
+		update companyInfo set companyPwd=#{companyPwd},companyAddr=#{companyAddr},companyFinalAddr=#{companyFinalAddr}
+		,companyEmail=#{companyEmail},companyPhoneNum=#{companyPhoneNum} 
+		where companyId=#{companyId}
+	</update>
+	
+					<!-- ♥ --><!-- ♥ --><!-- ♥ --><!-- 기업회원 --><!-- ♥ --><!-- ♥ --><!-- ♥ -->
+					
+					
+				
+
+					
+					<!-- ♥ --><!-- ♥ --><!-- ♥ --><!-- 공통공통 --><!-- ♥ --><!-- ♥ --><!-- ♥ -->
+					
+	<!-- 뮤지컬 & 연극 -->
+	<select id="mtgetLists" resultType="com.ticket.dto.MainListDTO" parameterType="map">
+		select distinct a.performCode,a.performName, a.performStartDate, a.performEndDate,
+		a.performGenreCode,a.performMainImage, b.placeName,c.genreName from performData a, placeData b,genreData c where c.genreCode = a.performGenreCode
+		and a.performPlaceCode = b.placeCode and (c.genreCode = 2 or c.genreCode = 3)
+	</select>
+	
+	<!-- 콘서트 & 클래식 -->
+	<select id="ccgetLists" resultType="com.ticket.dto.MainListDTO" parameterType="map">
+		select distinct a.performCode,a.performName, a.performStartDate, a.performEndDate,
+		a.performGenreCode,a.performMainImage, b.placeName,c.genreName from performData a, placeData b,genreData c where c.genreCode = a.performGenreCode
+		and a.performPlaceCode = b.placeCode and (c.genreCode = 1 or c.genreCode = 4)
+	</select>
+	
+	<!-- 전시 & 아동 -->
+	<select id="ecgetLists" resultType="com.ticket.dto.MainListDTO" parameterType="map">
+		select distinct a.performCode,a.performName, a.performStartDate, a.performEndDate,
+		a.performGenreCode,a.performMainImage, b.placeName,c.genreName from performData a, placeData b,genreData c where c.genreCode = a.performGenreCode
+		and a.performPlaceCode = b.placeCode and (c.genreCode = 5 or c.genreCode = 6)
+	</select>
+				
+	<!-- 데이터 갯수 -->	
+	<select id="getDataCount" parameterType="map" resultType="int">
+		select nvl(count(*),0) from (select distinct a.performCode,a.performName, a.performStartDate, 
+		a.performEndDate, a.performGenreCode,a.performMainImage, b.placeName,c.genreName 
+		from performData a, placeData b,genreData c where c.genreCode = a.performGenreCode and a.performPlaceCode = b.placeCode
+		and c.genreCode like '%' || #{searchValue} || '%' and a.performName like '%' || #{searchValue} || '%')
+	</select>
+	
+	<!-- 전체데이터 -->
+	<select id="getMainLists" resultType="com.ticket.dto.MainListDTO" parameterType="map">
+		select distinct a.performCode,a.performName, a.performStartDate, a.performEndDate,
+		a.performGenreCode,a.performMainImage, b.placeName,c.genreName from performData a, placeData b,genreData c where c.genreCode = a.performGenreCode
+		and a.performPlaceCode = b.placeCode
+		and c.genreCode like '%' || #{genreCode} || '%' and a.performName like '%' || #{searchValue} || '%'
+	</select>
+	
+	<select id="selectGenreData" resultType="com.ticket.dto.GenreDTO">
+	 select * from genreData
+	</select>
+	
+	<!-- 김태환 추가 -->
+	<select id="selectPerformList" parameterType="String" resultType="map">
+		select PERFORMCODE,PERFORMNAME,PERFORMSTARTDATE,PERFORMENDDATE,
+		(select placeName from PLACEDATA where PLACECODE = PERFORMPLACECODE) AS PERFORMPLACENAME 
+		from PERFORMDATA
+	</select>
+	
+	<delete id="deletePerformData" parameterType="String">
+		delete performData where performCode = #{performCode }
+	</delete>
+	
+	<delete id="deletePerformInfoData" parameterType="String">
+		delete performInfo where performCode = #{performCode }
+	</delete>
+	
+	<delete id="deleteDetailData" parameterType="String">
+		delete performDetail where performCode = #{performCode }
+	</delete>
+	
+	<delete id="deleteSeatingData" parameterType="String">
+		delete seatingData where performCode = #{performCode }
+	</delete>
+	
+	<!-- 김태환 2차 추가 -->
+	<update id="updateUserDate" parameterType="map">
+		update userInfo set USERUPDATEDATE = #{userUpdateDate } where userId = #{userId }
+	</update>
+	
+	<update id="updateUserPwd" parameterType="map">
+		update userInfo set USERPWD = #{userPwd }, userUpdateDate = sysdate where userId = #{userId }
+	</update>
+	
+					<!-- ♥ --><!-- ♥ --><!-- ♥ --><!-- 공통공통 --><!-- ♥ --><!-- ♥ --><!-- ♥ -->
+	
+	<!--예매내역정보 -->
+	<select id="myTicketList" resultType="com.ticket.dto.PreservedTicketDTO" parameterType="String">
+		SELECT DISTINCT B.PERFORMNAME,B.SEATROW,B.SEATNUM,B.SELECTEDDATE,B.TIME
+		FROM USERINFO A, PRESERVEDTICKET B WHERE A.USERID = #{userID}
+	</select>
+	
+	
+</mapper>
+
