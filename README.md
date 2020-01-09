@@ -1,3 +1,3 @@
 # Project
 
-<img src ="/projectimage/메인헤더.png"/>
+<img src ="/projectimage/메인 헤더.PNG"/>
