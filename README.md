@@ -19,7 +19,8 @@ Partycat은 공연예매사이트로 Yes24 Ticket 홈페이지를 모티브로�
 
 # DB Structure 
 <img src ="/projectimage/dbdiagram.jpg"/>
--<br/>
--<br/>
+-UserInfo(일반회원), CompanyInfo(기업회원) 구분<br/>
+-PerformData(공연정보테이블)의 PerformCode를 참조키로 하여 테이블 간 조인이 가능하게  <br/>
 -<br/>
 
+# 
