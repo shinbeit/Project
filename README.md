@@ -12,15 +12,18 @@ Partycat은 공연예매사이트로 Yes24 Ticket 홈페이지를 모티브로�
 -Back-End : Spring FrameWork<br/>
 -DB : Oracle DB<br/>
 
-# Project Role  
--<br/>
+# Project Role 
+-프로젝트에서 맡은 역할은 DB설계 및 구축 공연 정보창, 지도API사용, 후기게시판, 로그인등의 기능 구현 
 -<br/>
 -<br/>
 
 # DB Structure 
 <img src ="/projectimage/dbdiagram.jpg"/>
--UserInfo(일반회원), CompanyInfo(기업회원) 구분<br/>
--PerformData(공연정보테이블)의 PerformCode를 참조키로 하여 테이블 간 조인이 가능하게  <br/>
+-공연정보테이블 PerformData의 PerformCode를 참조키로하여 공연정보관련테이블을 세분화함 
+PerformDetail(공연상세정보), PerformInfo(공연시간,날짜), GenreData(장르), PlaceData(장소), RatingData(등급), SeatingData(좌석), 
+PaymentData(가격), ReviewBoard(공연관람후기)<br/>
 -<br/>
+
+
 
 # 
