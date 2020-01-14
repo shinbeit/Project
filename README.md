@@ -25,13 +25,12 @@ Partycat은 공연예매사이트로 Yes24 Ticket 홈페이지를 모티브로�
 -공연정보관련테이블 : Performdata, PerformDetail, GenreData, PlaceData, RatingData, SeatingData, PaymentData, ReviewBoard <br/>
 -회원정보관련테이블 : UserInfo, CompanyInfo, Mydiscount, MyCoupon, seatUser <br/>
 -예매결제관련테이블 : PreservedTicket, SelectedTicket, RemainData, AutoImage, CouponData <br/>
-<br/><br/>
+<br/>
 공연정보테이블 PerformData의 PerformCode를 참조키로하여 공연정보관련테이블을 세분화함 <br/>
 PerformDetail(공연상세정보), PerformInfo(공연시간,날짜), GenreData(장르), PlaceData(장소), RatingData(등급), SeatingData(좌석), 
 PaymentData(가격), ReviewBoard(공연관람후기)<br/>
 <br/>
-
--UserInfo(일반회원테이블), CompanyInfo(기업회원테이블) 구분하여 기업회원은 공연등록,관리,삭제가능 일반회원은 공연예매,결제 가능하게 구현<br/>
+UserInfo(일반회원테이블), CompanyInfo(기업회원테이블) 구분하여 기업회원은 공연등록,관리,삭제가능 일반회원은 공연예매,결제 구분<br/>
 
 
 
