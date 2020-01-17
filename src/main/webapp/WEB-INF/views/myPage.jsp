@@ -301,6 +301,7 @@
 								</div>
 
 								<div class="box p-2 px-3 bg-secondary d-flex">
+									<c:if test="${!empty preserved_list }">
 									<div>
 										<font color="white" size="4pt;">&nbsp;&nbsp;&nbsp;&nbsp;나의
 											관람 공연</font>
@@ -331,6 +332,35 @@
 											
 									 	</c:forEach>
 									</div>
+									</c:if>
+									
+									<c:if test="${empty preserved_list }">
+									<div>
+										<font color="white" size="4pt;">&nbsp;&nbsp;&nbsp;&nbsp;나의
+											관람 공연</font>
+											<table>
+			
+											<tr>
+											<td><font color="white">&nbsp;&nbsp;&nbsp;&nbsp;공연:</font></td><br/>
+											<td><font color="white">&nbsp;좌석:</font></td>
+											</tr> 
+											<tr> 
+											<td><font color="white">&nbsp;&nbsp;&nbsp;&nbsp;날짜:</font></td>
+											</tr>
+										<%-- 	<p>
+												<font color="white">
+													공연이름:
+													좌석 열: ${dto.seatRow}
+													좌석번호: ${dto.seatNum}
+													공연날짜: ${dto.selectedDate }
+													공연시간: ${dto.time }
+												</font>
+											</p> --%>
+											
+											</table>
+											
+									</div>
+									</c:if>
 								</div>
 								<div class="box p-2 px-3 bg-secondary d-flex">
 									<div>
