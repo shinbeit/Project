@@ -32,9 +32,13 @@ PaymentData(가격), ReviewBoard(공연관람후기)<br/>
 <br/> 
 
 # 회원가입 / 로그인
-<img src ="/projectimage/회원가입.jpg"/>
+<img src ="/projectimage/회원가입.jpg"/><br/>
 spring-security를 이용 bcryptPasswordEncoder로 회원가입시 패스워드 암호화
-<img src ="/projectimage/비밀번호 .jpg"/>
+<img src ="/projectimage/비밀번호 암호화.jpg"/>
+<br/>
+<img src ="/projectimage/로그인.jpg"/>
+<br/> 
+matches 함수이용 암호화된 비밀번호비교하여 로그인 가능하도록 
 
 
 
