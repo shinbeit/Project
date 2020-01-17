@@ -32,7 +32,10 @@ PaymentData(가격), ReviewBoard(공연관람후기)<br/>
 <br/> 
 
 # 회원가입 / 로그인
-<img src ="/projectimage/예매페이지.PNG"/>
+<img src ="/projectimage/회원가입.jpg"/>
+spring-security를 이용 bcryptPasswordEncoder로 회원가입시 패스워드 암호화
+<img src ="/projectimage/회원가입.jpg"/>
+
 
 
 # 공연정보페이지
