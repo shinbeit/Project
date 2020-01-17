@@ -59,6 +59,11 @@ JSTl을 사용하여 해당공연의 데이터를 출력
 <img src ="/projectimage/poster mapper.jpg"/>
 <hr>
 <br/>
+- jquery Tabs를 활용 상세정보/관람후기/공연장소/환불규정 으로 페이지 구분 
+- 각 탭 페이지는 <jsp:include> 액션 태그를 이용한 페이지 모듈화 
+
+
+
 
 
 
