@@ -31,5 +31,14 @@ PerformDetail(공연상세정보), PerformInfo(공연시간,날짜), GenreData(�
 PaymentData(가격), ReviewBoard(공연관람후기)<br/>
 <br/> 
 
-# List
-<img src ="/projectimage/공연 리스트.PNG"/>
+#로그인화면
+
+# 공연정보페이지
+<img src ="/projectimage/예매 페이지.PNG"/>
+<br/>
+공연정보관련 테이블에서 공연고유의 키값인 performcode를 사용 Join을통해 데이터를 조회,
+JSTl을 사용하여 해당공연의 데이터를 출력
+
+
+
+
