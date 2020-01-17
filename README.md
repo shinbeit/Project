@@ -32,4 +32,4 @@ PaymentData(가격), ReviewBoard(공연관람후기)<br/>
 <br/> 
 
 # List
-<img src ="/projectimage/공연 리스트.jpg"/>
+<img src ="/projectimage/공연 리스트.PNG"/>
