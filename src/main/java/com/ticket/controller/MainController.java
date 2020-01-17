@@ -1,7 +1,5 @@
 package com.ticket.controller;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -14,6 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +20,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +46,9 @@ public class MainController {
 	MainDAO dao;
 	@Resource
 	MyUtil myUtil;
+
+	@Autowired
+	BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	@RequestMapping(value = "/", method = { RequestMethod.GET, RequestMethod.POST })
 	public String main(Locale locale, Model model) {
@@ -214,7 +217,7 @@ public class MainController {
 		 * genreList = dao.selectGenreData();
 		 */
 
-		//List<MainListDTO> lists = dao.getList(genreCode, searchValue);
+		// List<MainListDTO> lists = dao.getList(genreCode, searchValue);
 		List<MainListDTO> mtlists = dao.mtgetList(genreCode, searchValue);
 		List<MainListDTO> cclists = dao.ccgetList(genreCode, searchValue);
 		List<MainListDTO> eclists = dao.ecgetList(genreCode, searchValue);
@@ -294,85 +297,105 @@ public class MainController {
 			CompanyMainDTO companyMainDTO) {
 
 		ModelAndView mav = new ModelAndView();
+
 		mav.setViewName("companyLogin");
 
 		return mav;
 
 	}
 
-	//로그인_OK 화면 (일반회원)
-		@RequestMapping(value = "/userLogin_ok.action", method = {RequestMethod.GET, RequestMethod.POST})
-		public String userLogin_ok(HttpServletRequest request,HttpServletResponse response, Model model) throws ParseException {
-			
-			String userId = request.getParameter("userId");
-			String userPwd = request.getParameter("userPwd");
-			
-			UserMainDTO userMainDTO = dao.myPageReadData(userId);
-					
-			if(userMainDTO==null || !userMainDTO.getUserId().equals(userId) || !userMainDTO.getUserPwd().equals(userPwd)) {
-				
-				request.setAttribute("message", "아이디 또는 패스워드를 정확히 입력하세요");
-				return "userLogin";
-				
-			}
-			
-			userMainDTO.setUserIPAddr(request.getRemoteAddr());
-			
-			HttpSession session = request.getSession();
-			session.setAttribute("userID", userId);
-			session.setAttribute("userIP", userMainDTO.getUserIPAddr());
-			
-			Cookie u_userId = new Cookie("userId", userId);
-			u_userId.setMaxAge(3000);
-			u_userId.setPath("/ticketing");
-			response.addCookie(u_userId);
-			
-			// ---------김태환 추가------------//
+	// 로그인_OK 화면 (일반회원)
+	@RequestMapping(value = "/userLogin_ok.action", method = { RequestMethod.GET, RequestMethod.POST })
+	public String userLogin_ok(HttpServletRequest request, HttpServletResponse response, Model model,
+			UserMainDTO userMainDTO) throws ParseException {
+		HttpSession session = request.getSession();
+		String userId = request.getParameter("userId");
+		
+		userMainDTO = dao.myPageReadData(userId);
+		
+		String rawPassword= request.getParameter("userPwd");; //입력된 비밀번호
+		String encodedPassword = userMainDTO.getUserPwd(); // DB에 저장된 비밀번호
+		if(bcryptPasswordEncoder.matches(rawPassword, encodedPassword )){
+		System.out.println("계정정보 일치");
 
-			Date today = new Date();
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date userUpdateDate = dateFormat.parse(userMainDTO.getUserUpdateDate());
-			long diffDate = (userUpdateDate.getTime() - today.getTime()) / (24 * 60 * 60 * 1000);
-			int diffValue = Math.abs((int) diffDate);
-
-			// System.out.println(diffValue);
-			if (diffValue >= 30) {
-				request.setAttribute("userMainDTO", userMainDTO);
-				return "pwdChangePage";
-			}
-
-			// ---------김태환 추가------------//
-			return "redirect:/main.action";
-			
+		}else{
+		request.setAttribute("message", "아이디 또는 패스워드를 정확히 입력하세요");	
+		System.out.println("계정정보 불일치");
+		return "userLogin";
 		}
 
-		//로그인_OK 화면 (기업회원)
-		@RequestMapping(value = "/companyLogin_ok.action", method = {RequestMethod.GET, RequestMethod.POST})
-		public String companyLogin_ok(HttpServletRequest request,HttpServletResponse response, CompanyMainDTO companyMainDTO, Model model) {
-			
-			String companyId = request.getParameter("companyId");
-			String companyPwd = request.getParameter("companyPwd");
-				
-			companyMainDTO = dao.myPageCompanyReadData(companyId);
-				
-			if(companyMainDTO==null || !companyMainDTO.getCompanyId().equals(companyId) || !companyMainDTO.getCompanyPwd().equals(companyPwd)) {
-				request.setAttribute("message", "아이디 또는 패스워드를 정확히 입력하세요");
-				return "redirect:/companyLogin.action";
-			}
-			
-			companyMainDTO.setCompanyIPAddr(request.getRemoteAddr());
-			
-			HttpSession session = request.getSession();
-			session.setAttribute("userID", companyId);
-			session.setAttribute("userIP", companyMainDTO.getCompanyIPAddr());
-			
-			Cookie u_userId = new Cookie("userId", companyId);
-			u_userId.setMaxAge(600);
-			u_userId.setPath("/ticketing");
-			response.addCookie(u_userId);
-			return "redirect:/main.action";
-				
+
+		/*
+		 * boolean passMatch = bcryptPasswordEncoder.matches(userPwd,
+		 * userMainDTO.getUserPwd());
+		 * 
+		 * if (userMainDTO == null || !userMainDTO.getUserId().equals(userId) ||
+		 * !userMainDTO.getUserPwd().equals(rawPassword)) {
+		 * 
+		 * request.setAttribute("message", "아이디 또는 패스워드를 정확히 입력하세요"); return
+		 * "userLogin";
+		 * 
+		 * }
+		 */
+
+		userMainDTO.setUserIPAddr(request.getRemoteAddr());
+
+		session.setAttribute("userID", userId);
+		session.setAttribute("userIP", userMainDTO.getUserIPAddr());
+
+		Cookie u_userId = new Cookie("userId", userId);
+		u_userId.setMaxAge(3000);
+		u_userId.setPath("/ticketing");
+		response.addCookie(u_userId);
+
+		// ---------김태환 추가------------//
+
+		Date today = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date userUpdateDate = dateFormat.parse(userMainDTO.getUserUpdateDate());
+		long diffDate = (userUpdateDate.getTime() - today.getTime()) / (24 * 60 * 60 * 1000);
+		int diffValue = Math.abs((int) diffDate);
+
+		// System.out.println(diffValue);
+		if (diffValue >= 30) {
+			request.setAttribute("userMainDTO", userMainDTO);
+			return "pwdChangePage";
 		}
+
+		// ---------김태환 추가------------//
+		return "redirect:/main.action";
+
+	}
+
+	// 로그인_OK 화면 (기업회원)
+	@RequestMapping(value = "/companyLogin_ok.action", method = { RequestMethod.GET, RequestMethod.POST })
+	public String companyLogin_ok(HttpServletRequest request, HttpServletResponse response,
+			CompanyMainDTO companyMainDTO, Model model) {
+
+		String companyId = request.getParameter("companyId");
+		String companyPwd = request.getParameter("companyPwd");
+
+		companyMainDTO = dao.myPageCompanyReadData(companyId);
+
+		if (companyMainDTO == null || !companyMainDTO.getCompanyId().equals(companyId)
+				|| !companyMainDTO.getCompanyPwd().equals(companyPwd)) {
+			request.setAttribute("message", "아이디 또는 패스워드를 정확히 입력하세요");
+			return "redirect:/companyLogin.action";
+		}
+
+		companyMainDTO.setCompanyIPAddr(request.getRemoteAddr());
+
+		HttpSession session = request.getSession();
+		session.setAttribute("userID", companyId);
+		session.setAttribute("userIP", companyMainDTO.getCompanyIPAddr());
+
+		Cookie u_userId = new Cookie("userId", companyId);
+		u_userId.setMaxAge(600);
+		u_userId.setPath("/ticketing");
+		response.addCookie(u_userId);
+		return "redirect:/main.action";
+
+	}
 
 	// 로그아웃 화면
 	@RequestMapping(value = "/logout.action", method = { RequestMethod.GET, RequestMethod.POST })
@@ -413,6 +436,7 @@ public class MainController {
 
 		int maxNum = 0;
 		userMainDTO.setNum(maxNum + 1);
+		userMainDTO.setUserPwd(this.bcryptPasswordEncoder.encode(userMainDTO.getUserPwd()));
 		dao.insertUserSignUpData(userMainDTO);
 		return "userLogin";
 
@@ -437,6 +461,7 @@ public class MainController {
 		dao.insertCompanySignUpData(companyMainDTO);
 		int maxNum = 0;
 		companyMainDTO.setNum(maxNum + 1);
+		companyMainDTO.setCompanyPwd(this.bcryptPasswordEncoder.encode(companyMainDTO.getCompanyPwd()));
 		return "companyLogin";
 
 	}
@@ -444,7 +469,7 @@ public class MainController {
 	// 마이페이지 화면(수정)
 	@RequestMapping(value = "/myPage.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public String myPage(HttpServletRequest request, HttpServletResponse response, Model model) {
-		
+
 		Cookie[] userId = request.getCookies();
 		String id = "";
 
@@ -455,17 +480,16 @@ public class MainController {
 				}
 			}
 		}
-		
+
 		String companyId = request.getParameter("companyId");
 		System.out.println(companyId + "+++++++++++++++++++++++++++++++++");
-		
-		
+
 		UserMainDTO dto = dao.myPageReadData(HttpUtils.getUserId(request));
 		CompanyMainDTO c_dto = dao.myPageCompanyReadData(HttpUtils.getUserId(request));
 		List<PreservedTicketDTO> p_dto = dao.myTicketList(id);
-		
-		System.out.println("좌석번호:" + p_dto.get(0).getSeatNum());
-		
+
+		// System.out.println("좌석번호:" + p_dto.get(0).getSeatNum());
+
 		request.setAttribute("userMainDTO", dto);
 		request.setAttribute("companyMainDTO", c_dto);
 
@@ -482,13 +506,13 @@ public class MainController {
 			List<GenreDTO> genreList = dao.selectGenreData();
 			List<PlaceDTO> placeList = dao.selectPlaceData();
 			List<RatingDTO> ratingList = dao.selectRatingData();
-						
+
 			request.setAttribute("genreList", genreList);
 			request.setAttribute("placeList", placeList);
 			request.setAttribute("ratingList", ratingList);
-						
+
 		}
-		//System.out.println("p_dto.size:" + p_dto.size());
+		// System.out.println("p_dto.size:" + p_dto.size());
 		request.setAttribute("preserved_list", p_dto);
 		return "myPage";
 

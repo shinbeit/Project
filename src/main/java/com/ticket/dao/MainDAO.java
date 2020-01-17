@@ -1,4 +1,4 @@
-package com.ticket.dao;
+	package com.ticket.dao;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -223,7 +223,7 @@ public class MainDAO {
 	public List<PreservedTicketDTO> myTicketList(String userId) {
 		List<PreservedTicketDTO> lists = sessionTemplate.selectList("mainMapper.myTicketList",userId);
 		
-		System.out.println("傍楷力格:" + lists.get(0).getPerformName());
+		//System.out.println("傍楷力格:" + lists.get(0).getPerformName());
 		return lists;	
 
 	}
