@@ -76,7 +76,7 @@ JSTl을 사용하여 해당공연의 데이터를 출력
 <img src ="/projectimage/일반마이페이지.PNG"/>
 <br/>
 - 결제완료시 PreservedTicket 테이블에 공연과 좌석, 시간에대한 정보가 저장됨,<br/>
-- userinof(회원정보테이블) PreservedTicket(예약된티켓정보) userid를 조건으로 Join, 데이터를 조회가능하게 구현
+- userinfo(회원정보테이블), PreservedTicket(예약된티켓정보테이블)에서 userid를 조건으로 Join, 데이터를 조회가능하게 구현
 
 
 
