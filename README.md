@@ -55,6 +55,8 @@ PaymentData(가격), ReviewBoard(공연관람후기)<br/>
 <br/>
 - 공연정보관련 테이블에서 공연고유의 키값인 performcode를 사용 Join을통해 데이터를 조회,
 JSTl을 사용하여 해당공연의 데이터를 출력
+
+<img src ="/projectimage/poster mapper.jpg"/>
 <hr>
 <br/>
 
