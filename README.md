@@ -27,7 +27,7 @@ Partycat은 공연예매사이트로 Yes24 Ticket 홈페이지를 모티브로�
 <br/>
 
 # Package 구조 
-<img src ="/projectimage/dbdiagram.jpg"/>
+<img src ="/projectimage/그림1.jpg"/>
 <hr>
 <br/> 
 
