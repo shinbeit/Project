@@ -34,7 +34,7 @@ PaymentData(가격), ReviewBoard(공연관람후기)<br/>
 # 회원가입 / 로그인
 <img src ="/projectimage/회원가입.jpg"/>
 spring-security를 이용 bcryptPasswordEncoder로 회원가입시 패스워드 암호화
-<img src ="/projectimage/회원가입.jpg"/>
+<img src ="/projectimage/비밀번호 .jpg"/>
 
 
 
